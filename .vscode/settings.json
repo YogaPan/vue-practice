@@ -1,0 +1,10 @@
+{
+  "cSpell.words": [
+    "composables",
+    "Firestore",
+    "rushstack",
+    "tailwindcss",
+    "unref"
+  ],
+  "css.lint.unknownAtRules": "ignore"
+}
