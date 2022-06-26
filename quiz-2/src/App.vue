@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import KeyStringValue from './components/KeyStringValue.vue'
-import KeyObjectValue from './components/KeyObjectValue.vue'
-import type { PathValue, KeyValue } from './types'
+import KeyStringValueBlock from './components/KeyStringValueBlock.vue'
+import KeyObjectValueBlock from './components/KeyObjectValueBlock.vue'
+import type { PathValue, KeyValue, KeyStringValue } from './types'
 
 const idCounter = ref(0)
 const genId = () => {
@@ -85,8 +85,9 @@ div(class="flex flex-col justify-between gap-2 h-screen p-2 bg-slate-100")
           button(class="w-12 rounded bg-slate-600 text-slate-50 text-lg" @click="() => handleRemove(keyValue.id)") -
     div(class="flex-1 flex flex-col gap-2 rounded border-gray-800 border-2 p-4") 
       template(v-for="keyValue in result")
-        KeyStringValue(v-if="typeof(keyValue.value) === 'string'" :key-value="keyValue")
-        KeyObjectValue(v-else :key-value="keyValue")
+        //- vue 不支援在 template 中進行 Typescript 轉型，此 VSCode 提示的型別 Error 可以忽略。
+        KeyStringValueBlock(v-if="typeof(keyValue.value) === 'string'" :key-value="keyValue")
+        KeyObjectValueBlock(v-else :key-value="keyValue")
 </template>
 
 <style scoped>
