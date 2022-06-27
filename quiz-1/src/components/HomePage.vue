@@ -34,7 +34,9 @@ const pageOption = computed(() => ({
   displayMode: Number(route.query.displayMode) || DisplayMode.Card,
 }))
 
-// TODO: Firestore Pagination
+// TODO: Filter current user
+// TODO: frontend pagination
+// TODO: calculate favorite
 const fetchUsers = async () => {
   loading.value = true
 

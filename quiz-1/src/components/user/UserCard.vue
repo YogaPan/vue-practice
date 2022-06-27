@@ -28,7 +28,8 @@ const handleFavoriteClick = async (e: Event) => {
 div(
   class="rounded-lg w-[300px] bg-slate-200 cursor-pointer overflow-hidden"
   @click="openUserModal")
-  img(:src="user.picture.large" class="w-full self-center")
+  img(v-if="user.picture.large" :src="user.picture.large" class="w-full self-center")
+  img(v-else src="../../assets/default-avatar.png" class="w-full self-center")
   div(class="flex flex-col p-2")
     p(class="text-lg") {{ user.email }}
     div(class="flex items-center justify-between")
