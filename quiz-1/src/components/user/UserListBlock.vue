@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import UserListItem from './UserListItem.vue'
-import type { User } from '../../types/user'
+import type { UserWithFavorite } from '../../types/user'
 
-defineProps<{ users: User[] }>()
+defineProps<{ users: UserWithFavorite[] }>()
 const emit = defineEmits(['favoriteSuccess'])
 
-const handleFavoriteSuccess = (user: User) => emit('favoriteSuccess', user)
+const handleFavoriteSuccess = (user: UserWithFavorite) =>
+  emit('favoriteSuccess', user)
 </script>
 
 <template lang="pug">

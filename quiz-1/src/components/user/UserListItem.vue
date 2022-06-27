@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { User } from '../../types/user'
+import type { UserWithFavorite } from '../../types/user'
 import UserModal from './UserModal.vue'
 import FavoriteButton from '../button/FavoriteButton.vue'
 import useFavorite from '@/composables/useFavorite'
 
-const props = defineProps<{ user: User }>()
+const props = defineProps<{ user: UserWithFavorite }>()
 const emit = defineEmits(['favoriteSuccess'])
 const modalOpen = ref(false)
 

@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import type { User } from '../../types/user'
+import type { UserWithFavorite } from '../../types/user'
 import FavoriteButton from '../button/FavoriteButton.vue'
 
 const props = defineProps<{
   open: boolean
   loading: boolean
-  user: User
+  user: UserWithFavorite
 }>()
 const emit = defineEmits(['close', 'favorite'])
 </script>
