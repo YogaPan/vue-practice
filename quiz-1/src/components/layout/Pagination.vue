@@ -6,12 +6,10 @@ const props = defineProps<{
   page: number
   pageSize: number
 }>()
-const maxVisibleButtons = 3
+const maxVisibleButtons = 5
 const emit = defineEmits(['pageChange'])
 
-const totalPage = computed(() => {
-  return 100
-})
+const totalPage = computed(() => Math.ceil(props.total / props.pageSize))
 
 const isInFirstPage = computed(() => props.page === 1)
 const isInLastPage = computed(() => props.page === totalPage.value)
@@ -35,7 +33,7 @@ const pages = computed(() => {
 })
 
 const gotoFirst = () => emit('pageChange', 1)
-const gotoLast = () => emit('pageChange', totalPage)
+const gotoLast = () => emit('pageChange', totalPage.value)
 const gotoPrevious = () => emit('pageChange', props.page - 1)
 const gotoNext = () => emit('pageChange', props.page + 1)
 const gotoPage = (page: number) => emit('pageChange', page)
@@ -45,14 +43,14 @@ const isPageActive = (page: number) => page === props.page
 <template lang="pug">
 div(class="flex flex-row justify-center py-2 px-4")
   ul(class="list-none flex flex-row items-center gap-2")
-    li(class="inline-block")
+    li(class="inline-block px-2 py-1 border-slate-800 border-2 rounded")
       button(
         type="button"
         @click="gotoFirst"
         :disabled="isInFirstPage"
         :class="{ 'text-slate-300': isInFirstPage }"
-      ) First
-    li(class="inline-block")
+      ) 1
+    li(class="inline-block px-2 py-1 border-slate-800 border-2 rounded")
       button(
         type="button"
         @click="gotoPrevious"
@@ -69,20 +67,20 @@ div(class="flex flex-row justify-center py-2 px-4")
         @click="gotoPage(page.name)"
         :disabled="page.isDisabled"
       ) {{ page.name }}
-    li(class="inline-block")
+    li(class="inline-block px-2 py-1 border-slate-800 border-2 rounded")
       button(
         type="button"
         @click="gotoNext"
         :disabled="isInLastPage"
         :class="{ 'text-slate-300': isInLastPage }"
       ) Next
-    li(class="inline-block")
+    li(class="inline-block px-2 py-1 border-slate-800 border-2 rounded")
       button(
         type="button"
         @click="gotoLast"
         :disabled="isInLastPage"
         :class="{ 'text-slate-300': isInLastPage }"
-      ) Last
+      ) {{ totalPage}}
 </template>
 
 <style scoped></style>

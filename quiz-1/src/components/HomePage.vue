@@ -29,7 +29,6 @@ const route = useRoute()
 const loading = ref(false)
 const users = ref<User[]>([])
 const favoriteList = ref<string[]>([])
-const totalCount = ref<number>(0)
 const pageOption = computed(() => ({
   filterType: Number(route.query.filterType) || FilterType.All,
   pageIndex: Number(route.query.pageIndex) || 1,
@@ -54,15 +53,17 @@ const usersWithFavorite = computed(() => {
   return result
 })
 
-// TODO: frontend pagination
+const paginatedUsers = computed(() => {
+  const limit = pageOption.value.pageSize
+  const offset = (pageOption.value.pageIndex - 1) * limit
+  return usersWithFavorite.value.slice(offset, offset + limit)
+})
+
 const fetchUsers = async () => {
   loading.value = true
 
   try {
-    const queryConstraints: QueryConstraint[] = [
-      orderBy('name'),
-      limit(pageOption.value.pageSize),
-    ]
+    const queryConstraints: QueryConstraint[] = [orderBy('email'), limit(1)]
     const q = query(collection(db, 'users'), ...queryConstraints)
     const querySnapshot = await getDocs(q)
     users.value = querySnapshot.docs.map((doc) => doc.data() as User)
@@ -106,10 +107,6 @@ const handleFavoriteSuccess = async (_targetUser: User) => {
   fetchFavorites()
 }
 
-watch(() => pageOption.value.filterType, fetchUsers)
-watch(() => pageOption.value.pageIndex, fetchUsers)
-watch(() => pageOption.value.pageSize, fetchUsers)
-
 onMounted(() => {
   fetchUsers()
   fetchFavorites()
@@ -133,16 +130,16 @@ div(class="flex flex-col h-screen")
       template(v-else)
         UserCardBlock(
           v-if="pageOption.displayMode === DisplayMode.Card"
-          :users="usersWithFavorite"
+          :users="paginatedUsers"
           @favorite-success="handleFavoriteSuccess")
         UserListBlock(
           v-else
-          :users="usersWithFavorite"
+          :users="paginatedUsers"
           @favorite-success="handleFavoriteSuccess")
         Pagination(
           :page="pageOption.pageIndex"
           :page-size="pageOption.pageSize"
-          :total="totalCount"
+          :total="usersWithFavorite.length"
           @page-change="handlePageIndexChange")
 </template>
 
