@@ -5,12 +5,14 @@ import {
   createUserWithEmailAndPassword,
   updateProfile,
 } from 'firebase/auth'
+import { doc, setDoc } from 'firebase/firestore'
 import { useRouter } from 'vue-router'
+import { emailRegex } from '../utils/regex'
+import { db } from '../initFirebase'
 import InputVue from './input/Input.vue'
 import Button from './button/Button.vue'
 import AuthForm from './layout/AuthForm.vue'
 import { FirebaseError } from 'firebase/app'
-import { emailRegex } from '../utils/regex'
 
 const router = useRouter()
 
@@ -62,6 +64,19 @@ const register = async (e: Event) => {
       unref(password)
     )
     await updateProfile(userCredential.user, { displayName: unref(name) })
+    await setDoc(doc(db, 'users', email.value), {
+      name: {
+        first: name.value,
+        last: '',
+      },
+      email: email.value,
+      picture: {
+        large: '',
+        medium: '',
+        thumbnail: '',
+      },
+      phone: '',
+    })
     router.push('/login')
   } catch (error) {
     if (error instanceof Error) {
