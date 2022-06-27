@@ -1,19 +1,42 @@
 import { ref } from 'vue'
-import { updateDoc, doc } from 'firebase/firestore'
-import { db } from '../initFirebase'
-import type { User } from '@/types/user'
+import { setDoc, updateDoc, doc, getDoc } from 'firebase/firestore'
+import { db, getCurrentUser } from '../initFirebase'
+import type { FavoriteDoc, UserWithFavorite } from '@/types/user'
 
-const useFavorite = (user: User) => {
+const useFavorite = (targetUser: UserWithFavorite) => {
   const loading = ref(false)
   const error = ref<Error>()
 
   const favorite = async () => {
     loading.value = true
+    error.value = undefined
+
     try {
-      const userRef = doc(db, 'users', user.email)
-      const favorite = !user.favorite
-      await updateDoc(userRef, { favorite })
-      error.value = undefined
+      const currentUser = await getCurrentUser()
+      if (!currentUser) return
+
+      const docRef = doc(db, 'favorites', currentUser.uid)
+      const docSnap = await getDoc(docRef)
+      if (!docSnap.exists()) {
+        await setDoc(doc(db, 'favorites', currentUser.uid), {
+          favorites: [targetUser.email],
+        })
+        return
+      }
+
+      const currentUserFavorites = (docSnap.data() as FavoriteDoc).favorites
+      currentUserFavorites
+      if (currentUserFavorites.find((email) => email === targetUser.email)) {
+        await updateDoc(doc(db, 'favorites', currentUser.uid), {
+          favorites: currentUserFavorites.filter(
+            (email) => email !== targetUser.email
+          ),
+        })
+      } else {
+        await updateDoc(doc(db, 'favorites', currentUser.uid), {
+          favorites: [...currentUserFavorites, targetUser.email],
+        })
+      }
     } catch (err) {
       if (err instanceof Error) error.value = err
       console.error(err)

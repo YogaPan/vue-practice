@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { User } from '../../types/user'
+import type { UserWithFavorite } from '../../types/user'
 import UserModal from './UserModal.vue'
 import FavoriteButton from '../button/FavoriteButton.vue'
 import useFavorite from '@/composables/useFavorite'
 
-const props = defineProps<{ user: User }>()
+const props = defineProps<{ user: UserWithFavorite }>()
 const emit = defineEmits(['favoriteSuccess'])
 
 const modalOpen = ref(false)
@@ -31,10 +31,10 @@ div(
   img(v-if="user.picture.large" :src="user.picture.large" class="w-full self-center")
   img(v-else src="../../assets/default-avatar.png" class="w-full self-center")
   div(class="flex flex-col p-2")
-    p(class="text-lg") {{ user.email }}
     div(class="flex items-center justify-between")
       p(class="text-lg") {{ user.name.first }}
       FavoriteButton(@click="handleFavoriteClick" :favorite="props.user.favorite" :size="20")
+    p(class="text-lg") {{ user.email }}
 UserModal(
   :open="modalOpen"
   :user="user"

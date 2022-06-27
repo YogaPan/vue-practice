@@ -19,8 +19,15 @@ export interface User {
     medium: string
     thumbnail: string
   }
-  favorite?: boolean
   phone: string
+}
+
+export interface UserWithFavorite extends User {
+  favorite: boolean
+}
+
+export interface FavoriteDoc {
+  favorites: string[]
 }
 
 export interface PageOption {

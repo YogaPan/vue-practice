@@ -1,18 +1,19 @@
 <script setup lang="ts">
-import { computed, ref, onMounted, watch } from 'vue'
+import { computed, ref, onMounted, watch, type Ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import {
+  doc,
   collection,
   orderBy,
   limit,
-  where,
+  getDoc,
   getDocs,
   query,
   QueryConstraint,
 } from 'firebase/firestore'
-import { FilterType, DisplayMode } from '@/types/user'
-import type { User } from '@/types/user'
-import { db } from '../initFirebase'
+import { getAuth } from 'firebase/auth'
+import { FilterType, DisplayMode, type UserWithFavorite } from '@/types/user'
+import { db, getCurrentUser } from '../initFirebase'
 import Navigation from './layout/Navigation.vue'
 import FilterBar from './layout/FilterBar.vue'
 import UserCardBlock from './user/UserCardBlock.vue'
@@ -20,12 +21,14 @@ import UserListBlock from './user/UserListBlock.vue'
 import Pagination from './layout/Pagination.vue'
 import Loading from './layout/Loading.vue'
 import Empty from './layout/Empty.vue'
+import type { User, FavoriteDoc } from '@/types/user'
 
 const router = useRouter()
 const route = useRoute()
 
 const loading = ref(false)
 const users = ref<User[]>([])
+const favoriteList = ref<string[]>([])
 const totalCount = ref<number>(0)
 const pageOption = computed(() => ({
   filterType: Number(route.query.filterType) || FilterType.All,
@@ -34,9 +37,24 @@ const pageOption = computed(() => ({
   displayMode: Number(route.query.displayMode) || DisplayMode.Card,
 }))
 
-// TODO: Filter current user
+const usersWithFavorite = computed(() => {
+  const auth = getAuth()
+  const currentUser = auth.currentUser
+
+  let result: UserWithFavorite[] = users.value
+    .filter((user) => user.email !== currentUser?.email)
+    .map((user) => ({
+      ...user,
+      favorite: favoriteList.value.includes(user.email),
+    }))
+
+  if (pageOption.value.filterType === FilterType.Favorite)
+    result = result.filter((user) => user.favorite)
+
+  return result
+})
+
 // TODO: frontend pagination
-// TODO: calculate favorite
 const fetchUsers = async () => {
   loading.value = true
 
@@ -45,8 +63,6 @@ const fetchUsers = async () => {
       orderBy('name'),
       limit(pageOption.value.pageSize),
     ]
-    if (pageOption.value.filterType === FilterType.Favorite)
-      queryConstraints.push(where('favorite', '==', true))
     const q = query(collection(db, 'users'), ...queryConstraints)
     const querySnapshot = await getDocs(q)
     users.value = querySnapshot.docs.map((doc) => doc.data() as User)
@@ -55,6 +71,16 @@ const fetchUsers = async () => {
   } finally {
     loading.value = false
   }
+}
+
+const fetchFavorites = async () => {
+  const currentUser = await getCurrentUser()
+  if (!currentUser) return
+
+  const docRef = doc(db, 'favorites', currentUser.uid)
+  const docSnap = await getDoc(docRef)
+  if (!docSnap.exists()) return
+  favoriteList.value = (docSnap.data() as FavoriteDoc).favorites
 }
 
 const changeQuery = (key: string) => (value: string | number) => {
@@ -76,22 +102,18 @@ const handlePageSizeChange = (pageSize: number) => {
 }
 const handleDisplayModeChange = changeQuery('displayMode')
 
-const handleFavoriteSuccess = async (targetUser: User) => {
-  if (pageOption.value.filterType === FilterType.All) {
-    users.value.forEach((user) => {
-      if (user.email === targetUser.email) user.favorite = !user.favorite
-    })
-  }
-  if (pageOption.value.filterType === FilterType.Favorite) {
-    users.value = users.value.filter((user) => user.email !== targetUser.email)
-  }
+const handleFavoriteSuccess = async (_targetUser: User) => {
+  fetchFavorites()
 }
 
 watch(() => pageOption.value.filterType, fetchUsers)
 watch(() => pageOption.value.pageIndex, fetchUsers)
 watch(() => pageOption.value.pageSize, fetchUsers)
 
-onMounted(fetchUsers)
+onMounted(() => {
+  fetchUsers()
+  fetchFavorites()
+})
 </script>
 
 <template lang="pug">
@@ -107,15 +129,15 @@ div(class="flex flex-col h-screen")
       @display-mode-change="handleDisplayModeChange")
     Loading(v-if="loading")
     div(v-else class="flex-1 bg-slate-100") 
-      Empty(v-if="users.length === 0")
+      Empty(v-if="usersWithFavorite.length === 0")
       template(v-else)
         UserCardBlock(
           v-if="pageOption.displayMode === DisplayMode.Card"
-          :users="users"
+          :users="usersWithFavorite"
           @favorite-success="handleFavoriteSuccess")
         UserListBlock(
           v-else
-          :users="users"
+          :users="usersWithFavorite"
           @favorite-success="handleFavoriteSuccess")
         Pagination(
           :page="pageOption.pageIndex"
