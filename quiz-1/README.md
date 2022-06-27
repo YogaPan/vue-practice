@@ -1,46 +1,29 @@
-# vue-project
+# Quiz 1 - Random User
 
-This template should help get you started developing with Vue 3 in Vite.
+[Live Demo](https://raven-vue-quiz-2.netlify.app/)
 
-## Recommended IDE Setup
+![Product](../docs/img/product.png)
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+## 如何執行專案
 
-## Type Support for `.vue` Imports in TS
+環境：
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin) to make the TypeScript language service aware of `.vue` types.
+1. 建議在 macOS 12 底下進行開發、運行。
+2. [node](https://nodejs.org/en/) version 使用 16.15.0，可以使用 [nvm](https://github.com/nvm-sh/nvm) 進行 node 各版本安裝和切換。
 
-If the standalone TypeScript plugin doesn't feel fast enough to you, Volar has also implemented a [Take Over Mode](https://github.com/johnsoncodehk/volar/discussions/471#discussioncomment-1361669) that is more performant. You can enable it by the following steps:
+本機開發步驟：
 
-1. Disable the built-in TypeScript Extension
-    1) Run `Extensions: Show Built-in Extensions` from VSCode's command palette
-    2) Find `TypeScript and JavaScript Language Features`, right click and select `Disable (Workspace)`
-2. Reload the VSCode window by running `Developer: Reload Window` from the command palette.
+1. `cd ./quiz-2`: 進入 quiz-2 專案目錄。
+2. `npm install`: 安裝 npm 套件、相關依賴。
+3. `npm run dev`: 使用 vite HMR 進型本機開發。
+4. 在瀏覽器開啟 [localhost:3000/](http://localhost:3000/)，即可進行預覽、開發。
 
-## Customize configuration
+## 遇到的困難、問題，以及解決的方法
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+困難：TODO
+問題：TODO
+解決方法：TODO
 
-## Project Setup
+## 如何部署專案
 
-```sh
-npm install
-```
-
-### Compile and Hot-Reload for Development
-
-```sh
-npm run dev
-```
-
-### Type-Check, Compile and Minify for Production
-
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+目前是透過 [Netlify](https://www.netlify.com/) 進行部署，當此 main branch 有新 commit、push 時便會自動觸發。

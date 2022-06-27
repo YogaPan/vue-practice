@@ -56,7 +56,7 @@ const result = computed(() => {
           return
         }
 
-        if (!key) return
+        if (key === '') return
         const target = current.find((p) => p.key === key)
         if (target) {
           target.value = row.value
