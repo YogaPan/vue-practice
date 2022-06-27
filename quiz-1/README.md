@@ -13,8 +13,8 @@
 
 1. `cd ./quiz-2`: 進入 quiz-2 專案目錄。
 2. `npm install`: 安裝 npm 套件、相關依賴。
-3. `npm run dev`: 使用 vite HMR 進型本機開發。
-4. 將 firebase admin credential 放在 `./quiz-2/firebaseAdminCredential.json` 路徑下後，執行 `npm run dummy-data`
+3. 將 firebase admin credential 放在 `./quiz-2/firebaseAdminCredential.json` 路徑下後，執行 `npm run dummy-data`。若已經有資料可以跳過這部。
+4. `npm run dev`: 使用 vite HMR 進型本機開發。
 5. 在瀏覽器開啟 [localhost:3000/](http://localhost:3000/)，即可進行預覽、開發。
 
 ## 遇到的困難、問題，以及解決的方法
