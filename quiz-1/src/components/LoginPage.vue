@@ -15,6 +15,7 @@ const password = ref('')
 const emailError = ref(false)
 const passwordError = ref(false)
 const errorMessage = ref('')
+const loading = ref(false)
 
 const login = async (e: Event) => {
   e.preventDefault()
@@ -40,6 +41,7 @@ const login = async (e: Event) => {
   }
 
   const auth = getAuth()
+  loading.value = true
 
   try {
     await signInWithEmailAndPassword(auth, unref(email), unref(password))
@@ -55,6 +57,8 @@ const login = async (e: Event) => {
         console.error(errorCode)
       }
     }
+  } finally {
+    loading.value = false
   }
 }
 
@@ -69,7 +73,7 @@ AuthForm(@submit="login")
   p(v-if="!!errorMessage" class="text-red-500 font-bold") {{ errorMessage }}
   div(class="flex flex-row gap-2 items-center justify-center")
     Button(@click="gotoRegisterPage" type="button" text="Register")
-    Button(primary type="submit" text="Login")
+    Button(primary type="submit" text="Login" :loading="loading")
 </template>
 
 <style scoped></style>

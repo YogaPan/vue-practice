@@ -7,18 +7,17 @@ div(class="lds-dual-ring")
 <style scoped>
 .lds-dual-ring {
   display: inline-block;
-  width: 80px;
-  height: 80px;
+  width: 20px;
+  height: 20px;
 }
 .lds-dual-ring:after {
   content: ' ';
   display: block;
-  width: 100px;
-  height: 100px;
-  margin: 8px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  border: 6px solid gray;
-  border-color: gray transparent gray transparent;
+  border: 2px solid white;
+  border-color: white transparent white transparent;
   animation: lds-dual-ring 1.2s linear infinite;
 }
 @keyframes lds-dual-ring {

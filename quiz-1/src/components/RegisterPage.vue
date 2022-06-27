@@ -21,6 +21,7 @@ const nameError = ref(false)
 const emailError = ref(false)
 const passwordError = ref(false)
 const errorMessage = ref('')
+const loading = ref(false)
 
 const register = async (e: Event) => {
   e.preventDefault()
@@ -52,6 +53,7 @@ const register = async (e: Event) => {
   }
 
   const auth = getAuth()
+  loading.value = true
 
   try {
     const userCredential = await createUserWithEmailAndPassword(
@@ -73,6 +75,8 @@ const register = async (e: Event) => {
         console.error(errorCode)
       }
     }
+  } finally {
+    loading.value = false
   }
 }
 
@@ -88,7 +92,7 @@ AuthForm(@submit="register")
   p(v-if="!!errorMessage" class="text-red-500 font-bold") {{ errorMessage }}
   div(class="flex flex-row gap-2 items-center justify-center")
     Button(@click="gotoLoginPage" type="button" text="Login")
-    Button(primary type="submit" text="Register")
+    Button(primary type="submit" text="Register" :loading="loading")
 </template>
 
 <style scoped></style>
