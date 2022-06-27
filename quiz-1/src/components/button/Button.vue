@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import Loading from '../layout/Loading.vue'
+
 const props = defineProps<{
   primary?: boolean
   loading?: boolean
@@ -16,10 +18,10 @@ const handleClick = (e: Event) => {
 <template lang="pug">
 button(
   @click="handleClick"
-  class="text-purple-800 py-2 px-4 rounded"
+  class="flex flex-row items-center justify-center w-[100px] h-[40px] rounded py-2 px-4 text-purple-800"
   :class="{ 'text-white bg-purple-500 font-bold': primary }"
   :type="type")
-    span(v-if="loading") loading
+    Loading(v-if="loading")
     span(v-else) {{ text }}
 </template>
 
