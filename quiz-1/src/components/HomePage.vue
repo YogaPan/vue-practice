@@ -93,32 +93,33 @@ onMounted(fetchUsers)
 </script>
 
 <template lang="pug">
-div
+div(class="flex flex-col h-screen")
   Navigation
-  FilterBar(
-    :filter-type="pageOption.filterType"
-    :display-mode="pageOption.displayMode"
-    :page-size="pageOption.pageSize"
-    @filter-change="handleFilterChange"
-    @page-size-change="handlePageSizeChange"
-    @display-mode-change="handleDisplayModeChange")
-  Loading(v-if="loading")
-  template(v-else) 
-    Empty(v-if="users.length === 0")
-    template(v-else)
-      UserCardBlock(
-        v-if="pageOption.displayMode === DisplayMode.Card"
-        :users="users"
-        @favorite-success="handleFavoriteSuccess")
-      UserListBlock(
-        v-else
-        :users="users"
-        @favorite-success="handleFavoriteSuccess")
-      Pagination(
-        :page="pageOption.pageIndex"
-        :page-size="pageOption.pageSize"
-        :total="totalCount"
-        @page-change="handlePageIndexChange")
+  div(class="flex-1 flex flex-col")
+    FilterBar(
+      :filter-type="pageOption.filterType"
+      :display-mode="pageOption.displayMode"
+      :page-size="pageOption.pageSize"
+      @filter-change="handleFilterChange"
+      @page-size-change="handlePageSizeChange"
+      @display-mode-change="handleDisplayModeChange")
+    Loading(v-if="loading")
+    div(v-else class="flex-1 bg-slate-100") 
+      Empty(v-if="users.length === 0")
+      template(v-else)
+        UserCardBlock(
+          v-if="pageOption.displayMode === DisplayMode.Card"
+          :users="users"
+          @favorite-success="handleFavoriteSuccess")
+        UserListBlock(
+          v-else
+          :users="users"
+          @favorite-success="handleFavoriteSuccess")
+        Pagination(
+          :page="pageOption.pageIndex"
+          :page-size="pageOption.pageSize"
+          :total="totalCount"
+          @page-change="handlePageIndexChange")
 </template>
 
 <style scoped></style>

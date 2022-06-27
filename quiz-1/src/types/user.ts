@@ -20,6 +20,7 @@ export interface User {
     thumbnail: string
   }
   favorite?: boolean
+  phone?: string
 }
 
 export interface PageOption {

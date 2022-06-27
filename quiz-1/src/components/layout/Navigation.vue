@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { getAuth, signOut } from 'firebase/auth'
 import { useRouter } from 'vue-router'
+import Button from '../button/Button.vue'
 
 const router = useRouter()
 const auth = getAuth()
@@ -19,9 +20,9 @@ const logout = async () => {
 </script>
 
 <template lang="pug">
-div(class="flex flex-row justify-between py-4 px-6 bg-slate-300")
-  p(class="text-lg") Hi, {{ username }}!
-  button(class="text-lg text-purple-700 underline" @click="logout") logout
+div(class="flex flex-row justify-between items-center gap-4 py-4 px-6 bg-slate-300")
+  h1(class="text-xl font-bold ") Hi, {{ username }}!
+  Button(class="" primary @click="logout" text="Logout")
 </template>
 
 <style scoped></style>
