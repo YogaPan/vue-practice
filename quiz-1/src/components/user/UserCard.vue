@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import type { User } from '../../types/user'
 import UserModal from './UserModal.vue'
-import Button from '../button/Button.vue'
+import FavoriteButton from '../button/FavoriteButton.vue'
 import useFavorite from '@/composables/useFavorite'
 
 const props = defineProps<{ user: User }>()
@@ -22,24 +22,24 @@ const handleFavoriteClick = async (e: Event) => {
   await favorite()
   emit('favoriteSuccess', props.user)
 }
-
-const buttonText = computed(() => (props.user.favorite ? 'Remove' : 'Favorite'))
 </script>
 
 <template lang="pug">
 div(
-  class="rounded-lg w-[300px] h-[300px] bg-slate-300 p-2 cursor-pointer"
+  class="rounded-lg w-[300px] bg-slate-200 cursor-pointer overflow-hidden"
   @click="openUserModal")
-  img(:src="user.picture.large" class="self-center w-[128px] h-[128px]")
-  p(class="text-lg") {{ user.email }}
-  p(class="text-lg") {{ user.name.first }}
-  Button(@click="handleFavoriteClick" primary :text="buttonText" :loading="loading")
+  img(:src="user.picture.large" class="w-full self-center")
+  div(class="flex flex-col p-2")
+    p(class="text-lg") {{ user.email }}
+    div(class="flex items-center justify-between")
+      p(class="text-lg") {{ user.name.first }}
+      FavoriteButton(@click="handleFavoriteClick" :favorite="props.user.favorite" :size="20")
 UserModal(
   :open="modalOpen"
   :user="user"
   @close="closeUserModal"
   @favorite="handleFavoriteClick"
-  :loading="loading" )
+  :loading="loading")
 </template>
 
 <style scoped></style>

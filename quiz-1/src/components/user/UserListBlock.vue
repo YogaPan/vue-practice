@@ -9,7 +9,7 @@ const handleFavoriteSuccess = (user: User) => emit('favoriteSuccess', user)
 </script>
 
 <template lang="pug">
-div(class="p-4 bg-white flex flex-col items-center justify-start gap-4")
+div(class="flex-1 flex flex-col items-center justify-start gap-4 p-4 bg-slate-100 ")
   UserListItem(
     v-for="user in users"
     :key="user.email"
