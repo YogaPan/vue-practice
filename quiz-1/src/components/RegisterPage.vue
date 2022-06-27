@@ -8,31 +8,28 @@ import {
 import { useRouter } from 'vue-router'
 import InputVue from './input/Input.vue'
 import Button from './button/Button.vue'
-import AuthBlockVue from './layout/AuthBlock.vue'
+import AuthForm from './layout/AuthForm.vue'
 import { FirebaseError } from 'firebase/app'
 import { emailRegex } from '../utils/regex'
 
 const router = useRouter()
 
-const name = ref('')
 const email = ref('')
+const name = ref('')
 const password = ref('')
 const nameError = ref(false)
 const emailError = ref(false)
 const passwordError = ref(false)
 const errorMessage = ref('')
 
-const register = async () => {
-  nameError.value = false
+const register = async (e: Event) => {
+  e.preventDefault()
+
   emailError.value = false
+  nameError.value = false
   passwordError.value = false
   errorMessage.value = ''
 
-  if (name.value === '') {
-    nameError.value = true
-    errorMessage.value = '請輸入姓名'
-    return
-  }
   if (email.value === '') {
     emailError.value = true
     errorMessage.value = '請輸入 email'
@@ -41,6 +38,11 @@ const register = async () => {
   if (!emailRegex.test(email.value)) {
     emailError.value = true
     errorMessage.value = '不合法的 email 格式'
+    return
+  }
+  if (name.value === '') {
+    nameError.value = true
+    errorMessage.value = '請輸入姓名'
     return
   }
   if (password.value === '') {
@@ -62,8 +64,8 @@ const register = async () => {
   } catch (error) {
     if (error instanceof Error) {
       console.error(error)
-      nameError.value = true
       emailError.value = true
+      nameError.value = true
       passwordError.value = true
       errorMessage.value = error.message
       if (error instanceof FirebaseError) {
@@ -78,15 +80,15 @@ const gotoLoginPage = () => router.push('/login')
 </script>
 
 <template lang="pug">
-AuthBlockVue
+AuthForm(@submit="register")
   h1(class="text-2xl font-bold") Register
-  InputVue(v-model="name" placeholder="name" :error="nameError")
   InputVue(v-model="email" placeholder="email" :error="emailError")
+  InputVue(v-model="name" placeholder="name" :error="nameError")
   InputVue(v-model="password" placeholder="password" type="password" :error="passwordError")
   p(v-if="!!errorMessage" class="text-red-500 font-bold") {{ errorMessage }}
   div(class="flex flex-row gap-2 items-center justify-center")
-    Button(@click="gotoLoginPage" text="Login")
-    Button(@click="register" primary text="Register")
+    Button(@click="gotoLoginPage" type="button" text="Login")
+    Button(primary type="submit" text="Register")
 </template>
 
 <style scoped></style>
