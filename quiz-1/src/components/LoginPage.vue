@@ -3,7 +3,7 @@ import { ref, unref } from 'vue'
 import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
 import { useRouter } from 'vue-router'
 import { FirebaseError } from '@firebase/util'
-import AuthBlockVue from './layout/AuthBlock.vue'
+import AuthForm from './layout/AuthForm.vue'
 import Input from './input/Input.vue'
 import Button from './button/Button.vue'
 import { emailRegex } from '../utils/regex'
@@ -16,7 +16,9 @@ const emailError = ref(false)
 const passwordError = ref(false)
 const errorMessage = ref('')
 
-const login = async () => {
+const login = async (e: Event) => {
+  e.preventDefault()
+
   emailError.value = false
   passwordError.value = false
   errorMessage.value = ''
@@ -60,14 +62,14 @@ const gotoRegisterPage = () => router.push('/register')
 </script>
 
 <template lang="pug">
-AuthBlockVue
+AuthForm(@submit="login")
   h1(class="text-2xl font-bold") Login
   Input(v-model="email" placeholder="email" :error="emailError")
   Input(v-model="password" placeholder="password" type="password" :error="passwordError")
   p(v-if="!!errorMessage" class="text-red-500 font-bold") {{ errorMessage }}
   div(class="flex flex-row gap-2 items-center justify-center")
-    Button(@click="gotoRegisterPage" text="Register" )
-    Button(@click="login" primary text="Login")
+    Button(@click="gotoRegisterPage" type="button" text="Register")
+    Button(primary type="submit" text="Login")
 </template>
 
 <style scoped></style>
