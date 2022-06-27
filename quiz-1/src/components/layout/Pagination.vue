@@ -37,63 +37,52 @@ const pages = computed(() => {
 const gotoFirst = () => emit('pageChange', 1)
 const gotoLast = () => emit('pageChange', totalPage)
 const gotoPrevious = () => emit('pageChange', props.page - 1)
-const gotoNext = () => emit('pageChange', props.page - 1)
+const gotoNext = () => emit('pageChange', props.page + 1)
 const gotoPage = (page: number) => emit('pageChange', page)
 const isPageActive = (page: number) => page === props.page
 </script>
 
 <template lang="pug">
-div(class="flex flex-row justify-between py-2 px-4")
-  ul(class="pagination")
-    li(class="pagination-item")
+div(class="flex flex-row justify-center py-2 px-4")
+  ul(class="list-none flex flex-row items-center gap-2")
+    li(class="inline-block")
       button(
         type="button"
         @click="gotoFirst"
         :disabled="isInFirstPage"
-        aria-label="Go to first page"
+        :class="{ 'text-slate-300': isInFirstPage }"
       ) First
-    li(class="pagination-item")
+    li(class="inline-block")
       button(
         type="button"
         @click="gotoPrevious"
         :disabled="isInFirstPage"
-        aria-label="Go to previous page"
+        :class="{ 'text-slate-300': isInFirstPage }"
       ) Previous
-    li(:key="page.name" v-for="page in pages" class="pagination-item")
+    li(
+      :key="page.name"
+      v-for="page in pages"
+      class="inline-block px-2 py-1 border-slate-800 border-2 rounded"
+      :class="{ 'text-white bg-slate-800': isPageActive(page.name) }")
       button(
         type="button"
         @click="gotoPage(page.name)"
         :disabled="page.isDisabled"
-        :class="{ active: isPageActive(page.name) }"
-        :aria-label="`Go to page number ${page.name}`"
       ) {{ page.name }}
-    li(class="pagination-item")
+    li(class="inline-block")
       button(
         type="button"
         @click="gotoNext"
         :disabled="isInLastPage"
-        aria-label="Go to next page"
+        :class="{ 'text-slate-300': isInLastPage }"
       ) Next
-    li(class="pagination-item")
+    li(class="inline-block")
       button(
         type="button"
         @click="gotoLast"
         :disabled="isInLastPage"
-        aria-label="Go to last page"
+        :class="{ 'text-slate-300': isInLastPage }"
       ) Last
 </template>
 
-<style scoped>
-.pagination {
-  list-style-type: none;
-}
-
-.pagination-item {
-  display: inline-block;
-}
-
-.active {
-  background-color: #4aae9b;
-  color: #ffffff;
-}
-</style>
+<style scoped></style>
