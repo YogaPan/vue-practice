@@ -3,6 +3,7 @@ defineProps<{
   modelValue: string
   type?: string
   placeholder?: string
+  error?: boolean
 }>()
 const emit = defineEmits(['update:modelValue'])
 
@@ -13,7 +14,8 @@ const handleInputChange = (event: Event) => {
 
 <template lang="pug">
 input(
-  class="w-full text-black border-1 rounded-lg border text-lg p-2"
+  class="w-full border-1 rounded-lg border p-2 text-lg text-black"
+  :class="{ 'border-red-600 border-2': error }"
   :value="modelValue"
   @input="handleInputChange"
   :placeholder="placeholder"
