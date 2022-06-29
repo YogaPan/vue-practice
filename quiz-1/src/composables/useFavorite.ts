@@ -1,9 +1,9 @@
 import { ref } from 'vue'
 import { setDoc, updateDoc, doc, getDoc } from 'firebase/firestore'
 import { db, getCurrentUser } from '../initFirebase'
-import type { FavoriteDoc, UserWithFavorite } from '@/types/user'
+import type { FavoriteDoc, User } from '@/types/user'
 
-const useFavorite = (targetUser: UserWithFavorite) => {
+const useFavorite = (targetUser: User) => {
   const loading = ref(false)
   const error = ref<Error>()
 

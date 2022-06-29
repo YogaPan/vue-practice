@@ -6,8 +6,8 @@ const props = defineProps<{
   page: number
   pageSize: number
 }>()
-const maxVisibleButtons = 5
-const emit = defineEmits(['pageChange'])
+const emit = defineEmits(['firstPage', 'prevPage', 'nextPage', 'lastPage'])
+const maxVisibleButtons = 3
 
 const totalPage = computed(() => Math.ceil(props.total / props.pageSize))
 
@@ -32,11 +32,10 @@ const pages = computed(() => {
   return range
 })
 
-const gotoFirst = () => emit('pageChange', 1)
-const gotoLast = () => emit('pageChange', totalPage.value)
-const gotoPrevious = () => emit('pageChange', props.page - 1)
-const gotoNext = () => emit('pageChange', props.page + 1)
-const gotoPage = (page: number) => emit('pageChange', page)
+const gotoFirst = () => emit('firstPage')
+const gotoLast = () => emit('lastPage')
+const gotoPrevious = () => emit('prevPage')
+const gotoNext = () => emit('nextPage')
 const isPageActive = (page: number) => page === props.page
 </script>
 
@@ -64,7 +63,6 @@ div(class="flex flex-row justify-center py-2 px-4")
       :class="{ 'text-white bg-slate-800': isPageActive(page.name) }")
       button(
         type="button"
-        @click="gotoPage(page.name)"
         :disabled="page.isDisabled"
       ) {{ page.name }}
     li(class="inline-block px-2 py-1 border-slate-800 border-2 rounded")

@@ -20,9 +20,6 @@ export interface User {
     thumbnail: string
   }
   phone: string
-}
-
-export interface UserWithFavorite extends User {
   favorite: boolean
 }
 

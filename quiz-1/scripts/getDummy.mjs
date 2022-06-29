@@ -3,9 +3,10 @@ import { initializeApp, applicationDefault } from 'firebase-admin/app'
 import { getFirestore } from 'firebase-admin/firestore'
 import { splitEvery } from 'ramda'
 
-const MAX_WRITE_PER_REQUEST = 500
 const DUMMY_DATA_URL = 'https://randomuser.me/api/?results=3010&seed=foobar'
 const DATABASE_URL = 'https://asia-east1.frontier-quiz.appspot.com'
+const TARGET_COLLECTION = 'users'
+const MAX_WRITE_PER_REQUEST = 500
 
 const writeToFirestore = async (users) => {
   initializeApp({
@@ -20,7 +21,7 @@ const writeToFirestore = async (users) => {
     const batch = db.batch()
 
     users.forEach((user) => {
-      const userRef = db.collection('users').doc(user.email)
+      const userRef = db.collection(TARGET_COLLECTION).doc(user.email)
       batch.set(userRef, user)
     })
 
