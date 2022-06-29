@@ -1,6 +1,5 @@
 import api from '@/initFirebase'
 import { FilterType, DisplayMode, type User } from '@/types/user'
-import type { DocumentData, QueryDocumentSnapshot } from 'firebase/firestore'
 import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 
@@ -8,34 +7,41 @@ const useFetchUsers = () => {
   const route = useRoute()
   const router = useRouter()
 
-  const reverse = ref(false)
   const users = ref<User[]>([])
-  const firstUserDoc = ref<QueryDocumentSnapshot<DocumentData>>()
-  const lastUserDoc = ref<QueryDocumentSnapshot<DocumentData>>()
+  const firstUser = ref<string>()
+  const lastUser = ref<string>()
   const totalCount = ref(0)
   const totalPage = computed(() =>
     Math.ceil(totalCount.value / pageOption.value.pageSize)
   )
+
   const loading = ref(false)
   const pageOption = computed(() => ({
     filterType: Number(route.query.filterType) || FilterType.All,
     pageIndex: Number(route.query.pageIndex) || 1,
     pageSize: Number(route.query.pageSize) || 4,
     displayMode: Number(route.query.displayMode) || DisplayMode.Card,
+    firstUser: route.query.firstUser
+      ? String(route.query.firstUser)
+      : undefined,
+    lastUser: route.query.lastUser ? String(route.query.lastUser) : undefined,
+    reverse: Boolean(Number(route.query.reverse)) || false,
   }))
 
   const fetchUsers = async () => {
     loading.value = true
     try {
+      console.log(pageOption.value)
       const fetchResult = await api.fetchUsers(
         pageOption.value.pageSize,
-        reverse.value,
-        firstUserDoc.value,
-        lastUserDoc.value
+        pageOption.value.reverse,
+        pageOption.value.firstUser,
+        pageOption.value.lastUser
       )
+
       users.value = fetchResult.users
-      firstUserDoc.value = fetchResult.firstUserDoc
-      lastUserDoc.value = fetchResult.lastUserDoc
+      firstUser.value = fetchResult.firstUser
+      lastUser.value = fetchResult.lastUser
       totalCount.value = fetchResult.allUserCount
     } catch (err) {
       console.error(err)
@@ -54,52 +60,85 @@ const useFetchUsers = () => {
   }
 
   const handleFilterChange = (filterType: FilterType) => {
-    reverse.value = false
-    firstUserDoc.value = undefined
-    lastUserDoc.value = undefined
     router.push({
       name: 'homePage',
-      query: { ...route.query, pageIndex: 1, filterType },
+      query: {
+        ...route.query,
+        pageIndex: 1,
+        filterType,
+        firstUser: undefined,
+        lastUser: undefined,
+        reverse: Number(false),
+      },
     })
   }
 
   const handleFirstPage = () => {
-    changeQuery('pageIndex')(1)
-    reverse.value = false
-    firstUserDoc.value = undefined
-    lastUserDoc.value = undefined
+    router.push({
+      name: 'homePage',
+      query: {
+        ...route.query,
+        pageIndex: 1,
+        firstUser: undefined,
+        lastUser: undefined,
+        reverse: Number(false),
+      },
+    })
   }
 
   const handleLastPage = () => {
-    changeQuery('pageIndex')(totalPage.value)
-    reverse.value = true
-    firstUserDoc.value = undefined
-    lastUserDoc.value = undefined
+    router.push({
+      name: 'homePage',
+      query: {
+        ...route.query,
+        pageIndex: totalPage.value,
+        firstUser: undefined,
+        lastUser: undefined,
+        reverse: Number(true),
+      },
+    })
   }
 
   const handlePrevPage = () => {
-    reverse.value = true
     const pageIndex = pageOption.value.pageIndex - 1
+    if (pageIndex <= 1) return handleFirstPage()
     changeQuery('pageIndex')(pageIndex)
-    if (pageIndex <= 1) {
-      reverse.value = false
-      firstUserDoc.value = undefined
-      lastUserDoc.value = undefined
-    }
+    router.push({
+      name: 'homePage',
+      query: {
+        ...route.query,
+        pageIndex,
+        firstUser: firstUser.value,
+        lastUser: lastUser.value,
+        reverse: Number(true),
+      },
+    })
   }
 
   const handleNextPage = () => {
-    reverse.value = false
-    changeQuery('pageIndex')(pageOption.value.pageIndex + 1)
+    router.push({
+      name: 'homePage',
+      query: {
+        ...route.query,
+        pageIndex: pageOption.value.pageIndex + 1,
+        firstUser: firstUser.value,
+        lastUser: lastUser.value,
+        reverse: Number(false),
+      },
+    })
   }
 
   const handlePageSizeChange = (pageSize: number) => {
-    firstUserDoc.value = undefined
-    lastUserDoc.value = undefined
-    reverse.value = false
     router.push({
       name: 'homePage',
-      query: { ...route.query, pageIndex: 1, pageSize },
+      query: {
+        ...route.query,
+        pageIndex: 1,
+        pageSize,
+        firstUser: undefined,
+        lastUser: undefined,
+        reverse: Number(false),
+      },
     })
   }
   const handleDisplayModeChange = changeQuery('displayMode')

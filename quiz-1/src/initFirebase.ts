@@ -9,10 +9,8 @@ import {
   orderBy,
   QueryConstraint,
   limit,
-  QueryDocumentSnapshot,
   startAfter,
   getDoc,
-  type DocumentData,
 } from 'firebase/firestore'
 import {
   createUserWithEmailAndPassword,
@@ -30,8 +28,8 @@ export const db = getFirestore(app)
 
 export interface UserResult {
   users: User[]
-  firstUserDoc: QueryDocumentSnapshot<DocumentData>
-  lastUserDoc: QueryDocumentSnapshot<DocumentData>
+  firstUser: string
+  lastUser: string
   hasNext: boolean
   hasPrev: boolean
   allUserCount: number
@@ -96,11 +94,11 @@ const fetchCounter = async (counterType: string): Promise<number> => {
 const fetchUsers = async (
   pageSize: number,
   reverse: boolean,
-  firstDoc?: QueryDocumentSnapshot<DocumentData>,
-  lastDoc?: QueryDocumentSnapshot<DocumentData>
+  firstDoc?: string | null,
+  lastDoc?: string | null
 ): Promise<UserResult> => {
-  const allUserCount = await fetchCounter('allUserCounter')
-  const favoriteUserCount = await fetchCounter('favoriteUserCounter')
+  const allUserCount = await fetchCounter('allUser')
+  const favoriteUserCount = await fetchCounter('favoriteUser')
 
   const queryConstraints: QueryConstraint[] = [
     orderBy('email', reverse ? 'desc' : 'asc'),
@@ -118,18 +116,16 @@ const fetchUsers = async (
   const processNormal = () => {
     const hasPrev = Boolean(doc)
     const hasNext = querySnapshot.docs.length === pageSize + 1
-    const firstUserDoc = querySnapshot.docs[0]
-    const lastUserDoc = hasNext
-      ? querySnapshot.docs[querySnapshot.docs.length - 2]
-      : querySnapshot.docs[querySnapshot.docs.length - 1]
     const users = querySnapshot.docs
       .map((doc) => doc.data() as User)
       .slice(0, pageSize)
+    const firstUser = users[0].email
+    const lastUser = users[users.length - 1].email
 
     return {
       users,
-      firstUserDoc,
-      lastUserDoc,
+      firstUser,
+      lastUser,
       hasNext,
       hasPrev,
       allUserCount,
@@ -141,16 +137,16 @@ const fetchUsers = async (
     const hasPrev = querySnapshot.docs.length === pageSize + 1
     const hasNext = Boolean(doc)
     const docs = querySnapshot.docs.slice().reverse()
-    const firstUserDoc = hasPrev ? docs[1] : docs[0]
-    const lastUserDoc = docs[docs.length - 1]
     const users = docs
       .map((doc) => doc.data() as User)
       .slice(hasPrev ? 1 : 0, querySnapshot.docs.length)
+    const firstUser = users[0].email
+    const lastUser = users[users.length - 1].email
 
     return {
       users,
-      firstUserDoc,
-      lastUserDoc,
+      firstUser,
+      lastUser,
       hasNext,
       hasPrev,
       allUserCount,

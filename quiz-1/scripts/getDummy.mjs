@@ -1,11 +1,14 @@
 import axios from 'axios'
 import { initializeApp, applicationDefault } from 'firebase-admin/app'
-import { getFirestore } from 'firebase-admin/firestore'
+import { getFirestore, FieldValue } from 'firebase-admin/firestore'
 import { splitEvery } from 'ramda'
 
-const DUMMY_DATA_URL = 'https://randomuser.me/api/?results=3010&seed=foobar'
+const COUNT = 600
+const DUMMY_DATA_URL = `https://randomuser.me/api/?results=${COUNT}&seed=foobar`
 const DATABASE_URL = 'https://asia-east1.frontier-quiz.appspot.com'
 const TARGET_COLLECTION = 'users'
+const COUNTER_COLLECTION = 'counter'
+// Firestore 單次最大寫入比數上限
 const MAX_WRITE_PER_REQUEST = 500
 
 const writeToFirestore = async (users) => {
@@ -14,15 +17,23 @@ const writeToFirestore = async (users) => {
     databaseURL: DATABASE_URL,
   })
 
-  const usersBatches = splitEvery(MAX_WRITE_PER_REQUEST, users)
+  const db = getFirestore()
+  const allUserCounterRef = db.collection(COUNTER_COLLECTION).doc('allUser')
 
+  allUserCounterRef.set({ count: 0 })
+
+  // 因為寫入 counter 也要計算在內，必須扣掉 1
+  const usersBatches = splitEvery(MAX_WRITE_PER_REQUEST - 1, users)
   usersBatches.forEach(async (users) => {
-    const db = getFirestore()
     const batch = db.batch()
 
     users.forEach((user) => {
       const userRef = db.collection(TARGET_COLLECTION).doc(user.email)
       batch.set(userRef, user)
+    })
+
+    batch.update(allUserCounterRef, {
+      count: FieldValue.increment(users.length),
     })
 
     await batch.commit()
