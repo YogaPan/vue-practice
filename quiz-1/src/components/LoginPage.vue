@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { FirebaseError } from '@firebase/util'
-import api from '@/initFirebase'
+import api from '../api/firebaseApi'
 import AuthForm from './layout/AuthForm.vue'
 import Input from './input/Input.vue'
 import Button from './button/Button.vue'

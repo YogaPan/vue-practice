@@ -11,7 +11,7 @@ import useFetchUsers from '../composables/useFetchUsers'
 
 const {
   users,
-  totalCount,
+  totalPage,
   loading,
   pageOption,
   handleFirstPage,
@@ -36,8 +36,9 @@ div(class="flex flex-col h-screen")
       @filter-change="handleFilterChange"
       @page-size-change="handlePageSizeChange"
       @display-mode-change="handleDisplayModeChange")
-    Loading(v-if="loading")
-    div(v-else class="flex-1 bg-slate-100") 
+    div(v-if="loading" class="flex-1 flex items-center justify-center")
+      Loading
+    div(v-else class="flex-1 flex flex-col justify-between bg-slate-100") 
       Empty(v-if="users.length === 0")
       template(v-else)
         UserCardBlock(
@@ -48,14 +49,14 @@ div(class="flex flex-col h-screen")
           v-else
           :users="users"
           @favorite-success="handleFavoriteSuccess")
-        Pagination(
-          :page="pageOption.pageIndex"
-          :page-size="pageOption.pageSize"
-          :total="totalCount"
-          @first-page="handleFirstPage"
-          @last-page="handleLastPage"
-          @prev-page="handlePrevPage"
-          @next-page="handleNextPage")
+    Pagination(
+      :page="pageOption.pageIndex"
+      :page-size="pageOption.pageSize"
+      :totalPage="totalPage"
+      @first-page="handleFirstPage"
+      @last-page="handleLastPage"
+      @prev-page="handlePrevPage"
+      @next-page="handleNextPage")
 </template>
 
 <style scoped></style>

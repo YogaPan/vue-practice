@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import Loading from '../layout/Loading.vue'
+import Loading from './Loading.vue'
 
 const props = defineProps<{
   primary?: boolean

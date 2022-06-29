@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { emailRegex } from '../utils/regex'
-import api from '../initFirebase'
+import api from '../api/firebaseApi'
 import InputVue from './input/Input.vue'
 import Button from './button/Button.vue'
 import AuthForm from './layout/AuthForm.vue'
@@ -49,7 +49,6 @@ const register = async (e: Event) => {
   }
 
   loading.value = true
-
   try {
     await api.register(email.value, password.value, name.value)
     router.push('/login')

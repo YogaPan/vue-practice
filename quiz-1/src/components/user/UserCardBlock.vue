@@ -9,7 +9,7 @@ const handleFavoriteSuccess = (user: User) => emit('favoriteSuccess', user)
 </script>
 
 <template lang="pug">
-div(class="flex-1 flex flex-row flex-wrap gap-6 px-8")
+div(class="flex flex-row flex-wrap gap-6 px-8")
   UserCard(
     v-for="user in users"
     :key="user.email"
