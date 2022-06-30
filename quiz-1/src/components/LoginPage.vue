@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref, unref } from 'vue'
-import { getAuth, signInWithEmailAndPassword } from 'firebase/auth'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { FirebaseError } from '@firebase/util'
+import api from '../api/firebaseApi'
 import AuthForm from './layout/AuthForm.vue'
 import Input from './input/Input.vue'
 import Button from './button/Button.vue'
@@ -40,11 +40,10 @@ const login = async (e: Event) => {
     return
   }
 
-  const auth = getAuth()
   loading.value = true
 
   try {
-    await signInWithEmailAndPassword(auth, unref(email), unref(password))
+    await api.signIn(email.value, password.value)
     router.push('/')
   } catch (error) {
     if (error instanceof Error) {
