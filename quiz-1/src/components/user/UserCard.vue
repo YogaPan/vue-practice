@@ -30,7 +30,7 @@ div(
   class="rounded-lg w-[300px] bg-slate-200 cursor-pointer overflow-hidden"
   @click="openUserModal")
   img(v-if="user.picture.large" :src="user.picture.large" class="w-full self-center")
-  img(v-else src="../../assets/default-avatar.png" class="w-full self-center")
+  img(v-else src="/default-avatar.png" class="w-full self-center")
   div(class="flex flex-col p-2")
     div(class="flex items-center justify-between")
       p(class="text-lg") {{ user.name.first }}

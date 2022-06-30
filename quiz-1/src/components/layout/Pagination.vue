@@ -66,7 +66,7 @@ div(class="flex flex-row justify-center py-8 px-4")
         :disabled="isInFirstPage"
         :class="{ 'text-slate-300 cursor-not-allowed opacity-25': isInFirstPage }"
       )
-        img(src="../../assets/chevron-left.svg" class="w-full self-center")
+        img(src="/chevron-left.svg" class="w-full self-center")
     li(v-if="showJumpToFirstPage" class="inline-block px-2 py-1 border-slate-800 border-2 rounded")
       button(
         type="button"
@@ -74,7 +74,7 @@ div(class="flex flex-row justify-center py-8 px-4")
         :disabled="isInFirstPage"
       ) 1
     li(v-if="showLeftEllipsis" class="inline-block")
-      img(src="../../assets/ellipsis.svg" class="w-[32px] self-center")
+      img(src="/ellipsis.svg" class="w-[32px] self-center")
 
     li(
       v-for="page in centerPages"
@@ -88,7 +88,7 @@ div(class="flex flex-row justify-center py-8 px-4")
       ) {{ page.name }}
 
     li(v-if="showRightEllipsis" class="inline-block")
-      img(src="../../assets/ellipsis.svg" class="w-[32px] self-center")
+      img(src="/ellipsis.svg" class="w-[32px] self-center")
     li(v-if="showJumpToLastPage" class="inline-block px-2 py-1 border-slate-800 border-2 rounded")
       button(
         type="button"
@@ -103,7 +103,7 @@ div(class="flex flex-row justify-center py-8 px-4")
         :disabled="isInLastPage"
         :class="{ 'text-slate-300 cursor-not-allowed opacity-25': isInLastPage }"
       )
-        img(src="../../assets/chevron-right.svg" class="w-full self-center")
+        img(src="/chevron-right.svg" class="w-full self-center")
 </template>
 
 <style scoped></style>

@@ -1,6 +1,6 @@
 <template lang="pug">
-img(v-if="favorite" alt="unfavorite icon" src="../../assets/favorite-fill.svg" :width="size" :height="size")
-img(v-else alt="favorite icon" src="../../assets/favorite.svg" :width="size" :height="size")
+img(v-if="favorite" alt="unfavorite icon" src="/favorite-fill.svg" :width="size" :height="size")
+img(v-else alt="favorite icon" src="/favorite.svg" :width="size" :height="size")
 </template>
 
 <script setup lang="ts">
