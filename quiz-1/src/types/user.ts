@@ -20,10 +20,25 @@ export interface User {
     thumbnail: string
   }
   phone: string
+  favoriteBy?: string[]
+  favorite?: boolean
 }
 
-export interface UserWithFavorite extends User {
-  favorite: boolean
+export interface UserResult {
+  users: User[]
+  firstUser: string
+  lastUser: string
+  hasNext: boolean
+  hasPrev: boolean
+  totalCount: number
+}
+
+export interface AllCounterResult {
+  count: number
+}
+
+export interface FavoriteCounterResult {
+  [uid: string]: number
 }
 
 export interface FavoriteDoc {
