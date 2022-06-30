@@ -7,17 +7,17 @@ div(class="loading")
 <style scoped>
 .loading {
   display: inline-block;
-  width: 60px;
-  height: 60px;
+  width: 20px;
+  height: 20px;
 }
 .loading:after {
   content: ' ';
   display: block;
-  width: 60px;
-  height: 60px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
-  border: 4px solid black;
-  border-color: black transparent black transparent;
+  border: 2px solid white;
+  border-color: white transparent white transparent;
   animation: loading 1.2s linear infinite;
 }
 @keyframes loading {
